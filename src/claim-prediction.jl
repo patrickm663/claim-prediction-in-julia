@@ -3,7 +3,7 @@
 # Email: patrickmoehrke46@gmail.com
 
 
-using Flux, CSV, DataFrames, MLJ
+using Flux, CSV, DataFrames, MLJ, MLUtils
 using MLJ: partition
 using Flux: Dense, train!
 
@@ -11,11 +11,15 @@ using Flux: Dense, train!
 
 data = DataFrame(CSV.File("../data/ausprivauto0405.csv"))
 
-## ClaimNb is the target variable, and we create a binary indicator from it and drop ClaimAmount as a feature.
+## ClaimOcc is the target variable, and we create a binary indicator from it and drop ClaimNb and ClaimAmount as features.
+data = select!(data, Not(:ClaimNb));
 data = select!(data, Not(:ClaimAmount));
-data.ClaimNb = data.ClaimNb .> 0
 
-function dummy_encode(x::AbstractVector, name::String)::DataFrame
+## We apply min-max scaling to the VehValue
+minmax(x) = (x .- minimum(x))./(maximum(x) .- minimum(x))
+data[:, :VehValue] = minmax(data[:, :VehValue])
+
+function dummy_encode(x, name)::DataFrame
 ## Purpose: dummy encodes a given vector, with the first entry dropped 
 ## as a baseline.
 ## Input: vector of Strings and a name to assign subseqent columns
@@ -53,13 +57,15 @@ data_encode = Matrix{Float64}(dummy_encode_all(data));
 X = data_encode[:, 1:(end-1)]
 y = data_encode[:, end]
 
+
 ## By using partition, we ensure the distribution of out target variable is evenly dispersed
 train, test = partition(eachindex(y), 0.7)
 
-train_X = X[train, :]
-train_y = y[train, :]
+## TODO: Apply ROSE in order to address class imbalance in the training set
+train_X, train_y = X[train, :], y[train, :] 
 train_data = [(train_X', train_y')]
 
+## Keep testing set imbalances like original data
 test_X = X[test, :]
 test_y = y[test, :]
 
@@ -118,4 +124,3 @@ CM = confusion_matrix(test_y', predict(test_X'))
 @show metrics(CM)
 display(CM)
 println()
-## At the time of running, the model achieved only a single misclassification at 2'000 epochs.
