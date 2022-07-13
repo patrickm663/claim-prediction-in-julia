@@ -17,8 +17,8 @@ The dataset consist of 9 columns comprising of:
 - **Gender:** Gender of the policyholder
 - **DrivAge:** Age of the policyholder
 - **ClaimOcc:** A binary indicator of whether or not a claim has occured (_target variable_)
-- **ClaimNb:** Number of claims that occured per policyholder in the year (max = 4)
-- **ClaimAmount:** Sum of claim payments in AUD
+- **ClaimNb:** Number of claims that occured per policyholder in the year (max = 4) (_excluded as features_)
+- **ClaimAmount:** Sum of claim payments in AUD (_excluded as features_)
 
 When dummy encoded (dropping one feature per class as a baseline), we get 23 features feeding into our model. The train/test split is 70-30 using partitioned random sampling to maintain a similar distribution of the target variable.
 
@@ -26,4 +26,4 @@ When dummy encoded (dropping one feature per class as a baseline), we get 23 fea
 The ANN comprises of 23 input neurons, one hidden layer with 10 neurons and a tanh activation function, and a single output neuron with a sigmoid activation function. ADAM is used as its optimiser using default parameters. The ANN is trained on 2'000 epochs.
 
 ## TODO
-Further development is underway to handle class imbalance and package dependency issues creating when attempting to install an unmaintained sampling package.
+Further development is underway to handle class imbalance. Current model results suggest the model only picks the majority class.
