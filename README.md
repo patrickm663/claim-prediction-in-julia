@@ -2,7 +2,7 @@
 A simple example applying Julia's Flux libary to an auto-insurance dataset.
 
 ## Purpose
-This example (and more to come) aims to see how an artifical neural network fares in a claim prediction task. Most Flux examples seem to either show very simple examples (like predicting the function f(x) = 4x + 2) or focus on image recognition tasks (like the well-known MINST) and then start focussing on more complex neural network structures. Through this example, we hope to show a middle-ground and introduce users to other interesting datasets after exhausting 'Boston' et. al.
+This example (and more to come) aims to see how an artifical neural network fares in a claim prediction task. Most Flux examples seem to either show very simple examples (like predicting the function f(x) = 4x + 2) or focus on image recognition tasks (like the well-known MINST) and then start focussing on more complex neural network structures. Through this example, we hope to show a middle-ground and introduce users to other interesting datasets after they have exhausted 'Boston' et. al. :)
 
 ## Overview of the Data
 The choice of data is a collection of 67'856 motor vehicle insurance policies recorded by an Australian short-term insurer in 2004. The dataset comprises of 4'624 policyholders that had at least one claim, making it fairly unbalanced with a target class making up just under 7% of the dataset.
