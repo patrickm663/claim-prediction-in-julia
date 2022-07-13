@@ -20,7 +20,7 @@ The dataset consist of 9 columns comprising of:
 - **ClaimNb:** Number of claims that occured per policyholder in the year (max = 4)
 - **ClaimAmount:** Sum of claim payments in AUD
 
-When dummy encoded (dropping one feature per class as a baseline), we get 23 features feeding into our model. The train/test split is
+When dummy encoded (dropping one feature per class as a baseline), we get 23 features feeding into our model. The train/test split is 70-30 using partitioned random sampling to maintain a similar distribution of the target variable.
 
 ## Model Architecture
 The ANN comprises of 23 input neurons, one hidden layer with 10 neurons and a tanh activation function, and a single output neuron with a sigmoid activation function. ADAM is used as its optimiser using default parameters. The ANN is trained on 2'000 epochs.
