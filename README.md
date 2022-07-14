@@ -32,7 +32,7 @@ As there were limited out-of-of the box solutions that support dummy variable en
 function dummy_encode(x, name)::DataFrame
 ## Purpose: dummy encodes a given vector, with the first entry dropped 
 ## as a baseline.
-## Input: vector of Strings and a name to assign subseqent columns
+## Input: vector of Strings and a name to assign subsequent columns
 ## Output: DataFrame
     u = unique(x)
     df = DataFrame()
