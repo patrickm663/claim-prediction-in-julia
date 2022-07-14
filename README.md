@@ -25,5 +25,42 @@ When dummy encoded (dropping one feature per class as a baseline), we get 23 fea
 ## Model Architecture
 The ANN comprises of 23 input neurons, one hidden layer with 10 neurons and a tanh activation function, and a single output neuron with a sigmoid activation function. ADAM is used as its optimiser using default parameters. The ANN is trained on 2'000 epochs.
 
+## Custom Functions for Dummy Encoding
+As there were limited out-of-of the box solutions that support dummy variable encoding over an entire DataFrame while dropping a baseline, a custom solution was designed. This may be of interest to others looking for a solution:
+
+'''julia
+function dummy_encode(x, name)::DataFrame
+## Purpose: dummy encodes a given vector, with the first entry dropped 
+## as a baseline.
+## Input: vector of Strings and a name to assign subseqent columns
+## Output: DataFrame
+    u = unique(x)
+    df = DataFrame()
+    for i ∈ eachindex(u)
+        colname = "$name" * "$i"
+        df[!, colname] = x .== u[i]
+    end
+    return df[!, (1:end) .!= 1]
+end
+
+function dummy_encode_all(X::DataFrame)::DataFrame
+## Purpose: dummy encodes all String columns in a DataFrame
+## Input: A DataFrame
+## Output: A DataFrame
+    df = DataFrame()
+    for i ∈ 1:size(X, 2)
+        if string(typeof(data[1, i])) ∉ ["Float64", "Int64", "Int8", "Int16", "Int32"]
+            de = dummy_encode(X[!, i], names(X)[i])
+            for c ∈ names(de)
+                df[!, c] = de[!, c]
+            end
+        else
+            df[!, names(X)[i]] = X[!, i]
+        end
+    end
+    return df
+end
+'''
+
 ## TODO
 Further development is underway to handle class imbalance. Current model results suggest the model only picks the majority class.
