@@ -28,7 +28,7 @@ The ANN comprises of 23 input neurons, one hidden layer with 10 neurons and a ta
 ## Custom Functions for Dummy Encoding
 As there were limited out-of-of the box solutions that support dummy variable encoding over an entire DataFrame while dropping a baseline, a custom solution was designed. This may be of interest to others looking for a solution:
 
-'''julia
+```julia
 function dummy_encode(x, name)::DataFrame
 ## Purpose: dummy encodes a given vector, with the first entry dropped 
 ## as a baseline.
@@ -60,7 +60,7 @@ function dummy_encode_all(X::DataFrame)::DataFrame
     end
     return df
 end
-'''
+```
 
 ## TODO
 Further development is underway to handle class imbalance. Current model results suggest the model only picks the majority class.
