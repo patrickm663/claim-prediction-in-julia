@@ -1,5 +1,5 @@
 # claim-prediction-in-julia
-A simple example applying Julia's Flux libary to an auto-insurance dataset.
+A simple example applying Julia's Flux.jl libary to an auto-insurance dataset.
 
 ## Purpose
 This example (and more to come) aims to see how an artifical neural network fares in a claim prediction task. Most Flux examples seem to either show very simple examples (like predicting the function f(x) = 4x + 2) or focus on image recognition tasks (like the well-known MINST) and then start focussing on more complex neural network structures. Through this example, we hope to show a middle-ground and introduce users to other interesting datasets after they have exhausted 'Boston' et. al. :)
