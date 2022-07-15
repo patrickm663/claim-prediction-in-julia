@@ -3,9 +3,11 @@
 # Email: patrickmoehrke46@gmail.com
 
 
-using Flux, CSV, DataFrames, MLJ, MLUtils
+using Flux, CSV, DataFrames 
+using Plots, MLJ, MLUtils, ClassImbalance
 using MLJ: partition
 using Flux: Dense, train!
+using ClassImbalance: smote
 
 ## We load Australian private auto insurance claim data from 2004, sourced from R's 'CASdatasets' package. Original reference: P. De Jong and G.Z. Heller (2008), Generalized linear models for insurance data, Cambridge University Press.
 
@@ -58,37 +60,44 @@ X = data_encode[:, 1:(end-1)]
 y = data_encode[:, end]
 
 
+## We apply SMOTE in order to address class imbalance in the training set
+smote_X, smote_y = smote(X, vcat(y...), k = 5, pct_under = 100, pct_over = 200) 
+
 ## By using partition, we ensure the distribution of out target variable is evenly dispersed
 train, test = partition(eachindex(y), 0.7)
-
-## TODO: Apply ROSE in order to address class imbalance in the training set
-train_X, train_y = X[train, :], y[train, :] 
+train_X, train_y = smote_X, smote_y 
 train_data = [(train_X', train_y')]
 
-## Keep testing set imbalances like original data
+## We keep a testing set imbalances like original data
 test_X = X[test, :]
-test_y = y[test, :]
+test_y = y[test]
 
-## We construct an ANN with one hidden layer of 10 neurons. the tanh activation function scales inputs between -1 and 1 and introduces non-linearity
+## We construct an ANN with one hidden layer of 18 neurons. the tanh activation function scales inputs between -1 and 1 and introduces non-linearity
 n_features = size(train_X, 2)
-model = Chain(Dense(n_features, 10, tanh), Dense(10, 1, sigmoid))
+model = Chain(Dense(n_features, 40, tanh), Dense(40, 15, tanh), Dense(15, 1, sigmoid))
 β = Flux.params(model)
 
 ## Adam is chosen as the optimiser and MSE the loss function
-opt = ADAM()
+δ = ADAM()
 ℓ(x, y) = Flux.Losses.mse(model(x), y)
 
 ## We train using 2'000 epochs and display the loss every 200 epochs for transparency
 println("Starting training...")
 @show ℓ(train_X', train_y')
 
-for epoch ∈ 1:2_000
-    Flux.train!(ℓ, β, train_data, opt)
-    if epoch % 200 == 0
+N = 50_000
+epochs = zeros(N)
+for epoch ∈ 1:N
+    Flux.train!(ℓ, β, train_data, δ)
+    epochs[epoch] = ℓ(train_X', train_y')
+    if epoch % (N/10) == 0
         @show epoch
         @show ℓ(train_X', train_y')
     end
 end
+
+gr()
+display(plot(1:N, epochs, xlabel = "Epochs", ylabel = "Loss"))
 
 ## Once trained, our model that generates the predictions assigns a 1 (at least one claim has occured) to all output values from the sigmoid output function greater than 0.5 and zero otherwise (no claim has occured)
 predict(x) = model(x) .> 0.5

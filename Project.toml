@@ -1,7 +1,9 @@
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+ClassImbalance = "8a53f5ae-3d58-49b9-85c1-02b25279b998"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
 MLDataPattern = "9920b226-0b2a-5f5f-9153-9aa70a013f8b"
 MLJ = "add582a8-e3ab-11e8-2d5e-e98b27df1bc7"
 MLUtils = "f1d291b0-491e-4a28-83b9-f70985020b54"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
