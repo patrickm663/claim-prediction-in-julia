@@ -32,7 +32,7 @@ The ANN comprises of 23 input neurons, two hidden layer with 40 neurons and 15 n
 ## Results
 On 1'000 epochs, the model achieves an MSE of 0.203:
 
-![]('/images/training_graph.png')
+![MSE vs Epochs on Training Data](./images/training_graph.png)
 
 On testing data, the model achieves an F1-score of 92.4% and accuracy of 86%:
 
@@ -44,7 +44,7 @@ metrics(CM) = (Accuracy = 0.8603920027508964, Precision = 0.9349289048084228, Re
   1199.0   288.0
 ```
 
-The model however struggles to predict the minority class "at leastone claim".
+The model however struggles to predict the minority class "at least one claim".
 
 ## Custom Functions for Dummy Encoding
 As there were limited out-of-of the box solutions that support dummy variable encoding over an entire DataFrame while dropping a baseline, a custom solution was designed. This may be of interest to others looking for a solution:
