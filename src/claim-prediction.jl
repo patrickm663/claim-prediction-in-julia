@@ -1,9 +1,9 @@
-# This .jl file is to illustrate a simple artifical neural network build using Julia's Flux package. No pre-processing is performed on the data aside from grouping all claims ≥ 1 as 'at least one claim'. The goal is to train a neural network that can reasonabilty predict whether a policyholder claimed or not
+# This .jl file is to illustrate a simple artifical neural network build using Julia's Flux package. 
 # Author: Patrick Moehrke
 # Email: patrickmoehrke46@gmail.com
 
 
-using Flux, CSV, DataFrames 
+using Flux, CSV, DataFrames, Statistics 
 using Plots, MLJ, MLUtils, ClassImbalance
 using MLJ: partition
 using Flux: Dense, train!
@@ -59,9 +59,25 @@ data_encode = Matrix{Float64}(dummy_encode_all(data));
 X = data_encode[:, 1:(end-1)]
 y = data_encode[:, end]
 
+## We create a helper function to drop low variance columns.
+
+function low_variance_filter(X; t=0.001)
+## Purpose: drops columns with low/zero variance
+## Input: A Matrix (DataFrame untested), a threshhold t (default=0.001)
+## Output: A Matrix (DataFrame untested)
+    l = zeros(0)
+    for c ∈ 1:size(X, 2)
+        if var(X[:, c]) ≤ t
+            append!(l, c)
+        end
+    end
+    return X[:, (1:end) .∉ (l,)] 
+end
+
+X = low_variance_filter(X);
 
 ## We apply SMOTE in order to address class imbalance in the training set
-smote_X, smote_y = smote(X, vcat(y...), k = 5, pct_under = 100, pct_over = 200) 
+smote_X, smote_y = smote(X, vcat(y...), k = 5, pct_under = 200, pct_over = 100) 
 
 ## By using partition, we ensure the distribution of out target variable is evenly dispersed
 train, test = partition(eachindex(y), 0.7)
@@ -72,13 +88,13 @@ train_data = [(train_X', train_y')]
 test_X = X[test, :]
 test_y = y[test]
 
-## We construct an ANN with one hidden layer of 18 neurons. the tanh activation function scales inputs between -1 and 1 and introduces non-linearity
+## We construct an ANN with two hidden layer of 40 neurons and 25 neurons, respectively. The tanh activation function scales inputs between -1 and 1 and introduces non-linearity.
 n_features = size(train_X, 2)
-model = Chain(Dense(n_features, 40, tanh), Dense(40, 15, tanh), Dense(15, 1, sigmoid))
+model = Chain(Dense(n_features, 40, tanh), Dense(40, 20, tanh), Dense(20, 1, sigmoid))
 β = Flux.params(model)
 
-## Adam is chosen as the optimiser and MSE the loss function
-δ = ADAM()
+## NAdam is chosen as the optimiser and MSE the loss function
+δ = NAdam()
 ℓ(x, y) = Flux.Losses.mse(model(x), y)
 
 ## We train using 50'000 epochs and display the loss every N/10 epochs for transparency
