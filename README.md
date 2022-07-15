@@ -32,7 +32,7 @@ The ANN comprises of 23 input neurons, two hidden layer with 40 neurons and 15 n
 ## Results
 On 1'000 epochs, the model achieves an MSE of 0.203:
 
-![training_graph]('/images/training_graph.png')
+![]('/images/training_graph.png')
 
 On testing data, the model achieves an F1-score of 92.4% and accuracy of 86%:
 
