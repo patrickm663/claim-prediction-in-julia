@@ -81,7 +81,7 @@ model = Chain(Dense(n_features, 40, tanh), Dense(40, 15, tanh), Dense(15, 1, sig
 δ = ADAM()
 ℓ(x, y) = Flux.Losses.mse(model(x), y)
 
-## We train using 2'000 epochs and display the loss every 200 epochs for transparency
+## We train using 50'000 epochs and display the loss every N/10 epochs for transparency
 println("Starting training...")
 @show ℓ(train_X', train_y')
 

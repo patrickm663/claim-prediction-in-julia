@@ -22,8 +22,10 @@ The dataset consist of 9 columns comprising of:
 
 When dummy encoded (dropping one feature per class as a baseline), we get 23 features feeding into our model. The train/test split is 70-30 using partitioned random sampling to maintain a similar distribution of the target variable.
 
+SMOTE from a [fork](https://github.com/patrickm663/ClassImbalance.jl) of ClassImbalance.jl is used to address class imbalance, resulting in better results.
+
 ## Model Architecture
-The ANN comprises of 23 input neurons, one hidden layer with 10 neurons and a tanh activation function, and a single output neuron with a sigmoid activation function. ADAM is used as its optimiser using default parameters. The ANN is trained on 2'000 epochs.
+The ANN comprises of 23 input neurons, two hidden layer with 40 neurons and 15 neurons, respectively. Both have tanh() activation function, and a single output neuron with a sigmoid activation function. ADAM is used as its optimiser using default parameters. The ANN is trained on 50'000 epochs.
 
 ## Custom Functions for Dummy Encoding
 As there were limited out-of-of the box solutions that support dummy variable encoding over an entire DataFrame while dropping a baseline, a custom solution was designed. This may be of interest to others looking for a solution:
@@ -63,4 +65,4 @@ end
 ```
 
 ## TODO
-Further development is underway to handle class imbalance. Current model results suggest the model only picks the majority class.
+The MSE can be reduced further by making modifications to the model's architecture and/or parameters in the optimiser. In addition, further feature engineering will likely improve results too. At 50'000 epochs, the MSE is about 0.148.
