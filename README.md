@@ -46,42 +46,8 @@ metrics(CM) = (Accuracy = 0.8603920027508964, Precision = 0.9349289048084228, Re
 
 The model however struggles to predict the minority class "at least one claim".
 
-## Custom Functions for Dummy Encoding
-As there were limited out-of-of the box solutions that support dummy variable encoding over an entire DataFrame while dropping a baseline, a custom solution was designed. This may be of interest to others looking for a solution:
-
-```julia
-function dummy_encode(x, name)::DataFrame
-## Purpose: dummy encodes a given vector, with the first entry dropped 
-## as a baseline.
-## Input: vector of Strings and a name to assign subsequent columns
-## Output: DataFrame
-    u = unique(x)
-    df = DataFrame()
-    for i ∈ eachindex(u)
-        colname = "$name" * "$i"
-        df[!, colname] = x .== u[i]
-    end
-    return df[!, (1:end) .!= 1]
-end
-
-function dummy_encode_all(X::DataFrame)::DataFrame
-## Purpose: dummy encodes all String columns in a DataFrame
-## Input: A DataFrame
-## Output: A DataFrame
-    df = DataFrame()
-    for i ∈ 1:size(X, 2)
-        if string(typeof(data[1, i])) ∉ ["Float64", "Int64", "Int8", "Int16", "Int32"]
-            de = dummy_encode(X[!, i], names(X)[i])
-            for c ∈ names(de)
-                df[!, c] = de[!, c]
-            end
-        else
-            df[!, names(X)[i]] = X[!, i]
-        end
-    end
-    return df
-end
-```
+## Custom Functions
+As there were limited out-of-of the box solutions that support some of the tasks I want to use, `src/utils.jl` contains some data processing functions such as dummy variable encoding over an entire DataFrame, a low variance filter, and the Yeo-Johnson transformation (which to my knowledge does not have a Julia implimentation readily available).
 
 ## TODO
-The MSE can be reduced further by making modifications to the model's architecture and/or parameters in the optimiser. In addition, further feature engineering will likely improve results too.
+The loss can be reduced further by making modifications to the model's architecture and/or parameters in the optimiser. In addition, further feature engineering will likely improve results too.
