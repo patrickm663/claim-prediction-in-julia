@@ -78,12 +78,12 @@ function YJ(y::Vector, λ)::Vector
     return y
 end
 
-function YeoJohnson(y::Vector; min = -10, max = 10, λ = 0.1, opt = true)::Vector
+function YeoJohnson(y::Vector; min = -2, max = 2, λ = 0.1, opt = true)::Vector
 ## Purpose: Calls the YJ function depending on whether lambda should be optimised or not
 ## Input: A Vector. Optional inputs are the min and max search range for the optimiser, an optional λ parameter, and a flag for whether to optimise or use the λ input provided
 ## Output: a Vector of Yeo-Johnson transformed values
     if opt == true
-        λ = λoptimimum(y, min, max)
+        λ = λoptimum(y, min, max)
         return YJ(y, λ) 
     else
         return YJ(y, λ)
@@ -112,7 +112,7 @@ function sgn(x)
     end
 end
 
-function λoptimimum(y::Vector, min, max)::Float32
+function λoptimum(y::Vector, min, max)::Float32
 ## Purpose: Computes the value of λ that minimises the log-likelihood of the Yeo-Johnson power transformation
 ## Input: a Vector and minimum and maximum values for the search range
 ## Output: a Value for λ̂, the minimiser
