@@ -21,8 +21,8 @@ function DummyEncodeAll(X::DataFrame)::DataFrame
 ## Output: A DataFrame
     df = DataFrame()
     for i ∈ 1:size(X, 2)
-        if string(typeof(data[1, i])) ∉ ["Float64", "Int64", "Int8", "Int16", "Int32"]
-            de = dummy_encode(X[!, i], names(X)[i])
+        if string(typeof(data[1, i])) ∉ ["Float16", "Float32", "Float64", "Int8", "Int16", "Int32", "Int64"]
+            de = DummyEncode(X[!, i], names(X)[i])
             for c ∈ names(de)
                 df[!, c] = de[!, c]
             end
@@ -41,8 +41,9 @@ function DummyEncode(x, name)::DataFrame
     u = unique(x)
     df = DataFrame()
     for i ∈ eachindex(u)
-        colname = "$name" * "$i"
-        df[!, colname] = x .== u[i]
+        classname = "'" * u[i] * "'"
+        colname = "$name" * "." * "$classname"
+        df[!, colname] = convert.(Int8, x .== u[i])
     end
     return df[!, (1:end) .!= 1]
 end
@@ -78,11 +79,12 @@ function YJ(y::Vector, λ)::Vector
 end
 
 function YeoJohnson(y::Vector; min = -10, max = 10, λ = 0.1, opt = true)::Vector
-## Purpose: Calls the _YeoJohnson depending on whether lambda should be optimised or not
+## Purpose: Calls the YJ function depending on whether lambda should be optimised or not
 ## Input: A Vector. Optional inputs are the min and max search range for the optimiser, an optional λ parameter, and a flag for whether to optimise or use the λ input provided
 ## Output: a Vector of Yeo-Johnson transformed values
     if opt == true
-        return YJ(y, λoptimimum(y, min, max))
+        λ = λoptimimum(y, min, max)
+        return YJ(y, λ) 
     else
         return YJ(y, λ)
     end
