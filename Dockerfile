@@ -1,5 +1,4 @@
 # Author: Patrick Moehrke
-# Licence: MIT
 
 ## Using Ubuntu 22.10 as a base, install Pip via APT
 FROM ubuntu:22.10
