@@ -24,7 +24,7 @@ WORKDIR /notebook
 COPY . .
 
 ## Activate the project and install dependencies
-RUN julia -e 'using Pkg; Pkg.activate("src/"); Pkg.add("https://github.com/patrickm663/ClassImbalance.jl"); Pkg.add("https://github.com/patrickm663/YeoJohnson.jl"); Pkg.instantiate()'
+RUN julia -e 'using Pkg; Pkg.activate("src/"); Pkg.add(url="https://github.com/patrickm663/ClassImbalance.jl"); Pkg.add(url="https://github.com/patrickm663/YeoJohnson.jl"); Pkg.instantiate()'
 
 ## Start JupyterLab on boot
 CMD jupyter notebook --allow-root --ip "*" --no-browser --port 8888
