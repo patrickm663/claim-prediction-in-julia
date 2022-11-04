@@ -2,7 +2,7 @@
 
 ## Using Ubuntu 22.10 as a base, install Pip via APT
 FROM ubuntu:22.10
-RUN apt update && apt upgrade
+RUN apt update && apt upgrade -y
 RUN apt install pip git wget -y
 
 ## With Pip installed, install JupyterLab
