@@ -16,6 +16,7 @@ RUN cp -r julia-1.8.2 /opt/
 RUN ln -s /opt/julia-1.8.2/bin/julia /usr/local/bin/julia
 RUN rm julia-1.8.2-linux-x86_64.tar.gz
 RUN julia -e 'using Pkg; Pkg.add("IJulia"); Pkg.build("IJulia")'
+
 EXPOSE 8888
 
 ## Copy the repo's files and data into the container (see .dockerignore for exlusions)
@@ -23,7 +24,7 @@ WORKDIR /notebook
 COPY . .
 
 ## Activate the project and install dependencies
-RUN julia -e 'using Pkg; Pkg.activate("src/"); Pkg.instantiate()'
+RUN julia -e 'using Pkg; Pkg.activate("src/"); Pkg.add(url="https://github.com/patrickm663/ClassImbalance.jl"); Pkg.add(url="https://github.com/patrickm663/YeoJohnson.jl"); Pkg.instantiate()'
 
 ## Start JupyterLab on boot
-CMD jupyter lab --allow-root --ip 0.0.0.0 --port 8888 
+CMD jupyter notebook --allow-root --ip "*" --no-browser --port 8888
