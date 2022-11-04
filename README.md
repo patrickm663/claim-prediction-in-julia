@@ -22,14 +22,14 @@ The dataset consist of 9 columns comprising of:
 
 When dummy encoded (dropping one feature per class as a baseline), we get 23 features feeding into our model. We use a low-variance filter to remove zero/low variance features.
 
-The Yeo Johnson transformation for my repo https://github.com/patrickm663/YeoJohnson.jl is used to transform the Exposure column to more closely represent a normal distribution. 
+The Yeo Johnson transformation for my repo https://github.com/patrickm663/YeoJohnson.jl is used to transform the features to more closely represent a normal distribution. 
 
 SMOTE from my fork of ClassImbalance.jl (available at https://github.com/patrickm663/ClassImbalance.jl) is used to address class imbalance, resulting in better results. 
 
 The train/test split is 70-30 using partitioned random sampling to maintain a similar distribution of the target variable. The testing set does not have SMOTE applie The testing set does not have SMOTE applied.
 
 ## Model Architecture
-The ANN comprises of 23 input neurons, two hidden layer with 40 neurons and 15 neurons, respectively. Both have tanh() activation function, and a single output neuron with a sigmoid activation function. NAdam is used as its optimiser using default parameters.
+The ANN comprises of 23 input neurons, two hidden layer with 40 neurons and 15 neurons, respectively. Both have tanh() activation function, and a single output neuron with a sigmoid activation function. Adam is used as its optimiser using default parameters.
 
 ## Results
 On 1'000 epochs, the model achieves an MSE of 0.203:
@@ -65,6 +65,6 @@ Follow the link in the console output (https://127.0.0.1:8888/lab?token....).
 ## TODO
 - [ ] The loss can be reduced further by making modifications to the model's architecture and/or parameters in the optimiser. In addition, further feature engineering will likely improve results too.
 
-- [ ] GPU training is currently in progress using an AWS EC2 instance (since Sagemaker does not support Julia, it has to be custom-madepe).
+- [ ] GPU training is currently in progress using a custom SageMaker notebook (since Sagemaker does not support Julia out of the box, Julia and IJulia needs to be installed via Jupyter's terminal).
 
 - [ ] Different ML models are being tested and compared to the neural network.
