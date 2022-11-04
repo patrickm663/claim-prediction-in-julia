@@ -65,6 +65,6 @@ Follow the link in the console output (https://127.0.0.1:8888/lab?token....).
 ## TODO
 - [ ] The loss can be reduced further by making modifications to the model's architecture and/or parameters in the optimiser. In addition, further feature engineering will likely improve results too.
 
-- [ ] GPU training is currently in progress using an AWS EC2 instance (sice Sagemaker does not support Julia, it has to be custom-made).
+- [ ] GPU training is currently in progress using an AWS EC2 instance (since Sagemaker does not support Julia, it has to be custom-madepe).
 
 - [ ] Different ML models are being tested and compared to the neural network.
