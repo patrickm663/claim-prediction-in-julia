@@ -22,9 +22,11 @@ The dataset consist of 9 columns comprising of:
 
 When dummy encoded (dropping one feature per class as a baseline), we get 23 features feeding into our model. We use a low-variance filter to remove zero/low variance features.
 
-SMOTE from a [fork](https://github.com/patrickm663/ClassImbalance.jl) of ClassImbalance.jl is used to address class imbalance, resulting in better results. 
+The Yeo Johnson transformation for my repo https://github.com/patrickm663/YeoJohnson.jl is used to transform the Exposure column to more closely represent a normal distribution. 
 
-The train/test split is 70-30 using partitioned random sampling to maintain a similar distribution of the target variable.
+SMOTE from my fork of ClassImbalance.jl (available at https://github.com/patrickm663/ClassImbalance.jl) is used to address class imbalance, resulting in better results. 
+
+The train/test split is 70-30 using partitioned random sampling to maintain a similar distribution of the target variable. The testing set does not have SMOTE applie The testing set does not have SMOTE applied.
 
 ## Model Architecture
 The ANN comprises of 23 input neurons, two hidden layer with 40 neurons and 15 neurons, respectively. Both have tanh() activation function, and a single output neuron with a sigmoid activation function. NAdam is used as its optimiser using default parameters.
@@ -46,8 +48,23 @@ metrics(CM) = (Accuracy = 0.8603920027508964, Precision = 0.9349289048084228, Re
 
 The model however struggles to predict the minority class "at least one claim".
 
+**The Notebook available is a work in progress and results may vary.**
+
 ## Custom Functions
-As there were limited out-of-of the box solutions that support some of the tasks I want to use, `src/utils.jl` contains some data processing functions such as dummy variable encoding over an entire DataFrame, a low variance filter, and the Yeo-Johnson transformation (which to my knowledge does not have a Julia implimentation readily available).
+As there were limited out-of-of the box solutions that support some of the tasks I want to use, `src/utils.jl` contains some data processing functions such as dummy variable encoding over an entire DataFrame, a low variance filter, and some confusion matrix helpers and metrics.
+
+## Docker
+The Dockerfile provided creates a Dockerised Jupyter Lab at port 8888 with IJulia and the required packages installed.
+
+```
+docker build -t claim-prediction-in-julia .
+docker run -ti -p 8888:8888 claim-prediction-in-julia
+```
+Follow the link in the console output (https://127.0.0.1:8888/lab?token....).
 
 ## TODO
-The loss can be reduced further by making modifications to the model's architecture and/or parameters in the optimiser. In addition, further feature engineering will likely improve results too.
+- [  ] The loss can be reduced further by making modifications to the model's architecture and/or parameters in the optimiser. In addition, further feature engineering will likely improve results too.
+
+- [  ] GPU training is currently in progress using an AWS EC2 instance (sice Sagemaker does not support Julia, it has to be custom-made).
+
+- [  ] Different ML models are being tested and compared to the neural network.
